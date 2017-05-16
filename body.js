@@ -1,8 +1,11 @@
 var  Body = function (x, y, width, height) {
+	var self = this;
 	this.x 		= 	x;
 	this.y 		= 	y;
 	this.width 	= 	width;
 	this.height	= 	height;
+
+	this.rectColor = "#000";
 	
 	//must be set explicitly
 	this.hasGravity		=	false;
@@ -13,25 +16,49 @@ var  Body = function (x, y, width, height) {
 		this.y = y;
 	}
 
+	this.sprites = [];
+	this.currentSprite;
+
+	this.setCurrentSprite = function (index) {
+		self.currentSprite = self.sprites[index];
+	}
+
 	this.isIntersect = function (otherBody, log) {
+		//IMP: canvas is represented as being in the 4th Quadrant, so y is -ve
 		if (log === true) {
 			console.log(otherBody);
 		}
 
-		var xTop 	= 	this.x + height;
-		var yTop	=	this.y + width;
+		var xLeft 	= 	self.x;
+		var yTop	=	-self.y;
+		
+		var xRight		= 	self.x + self.width;
+		var yBottom		=	-(self.y + self.height);
 
-		var otherBodyXTop	=	otherBody.x + otherBody.height;
-		var otherBodyYTop	=	otherBody.y + otherBody.width;
+		var otherBodyXLeft	=	otherBody.x;
+		var otherBodyYTop	=	-otherBody.y;
 
-		if (this.x > otherBodyXTop || otherBody.x > xTop) {
+		var otherBodyXRight		=	otherBody.x + otherBody.width;
+		var otherBodyYBottom	=	-(otherBody.y + otherBody.height);
+
+
+		if (xLeft > otherBodyXRight || otherBodyXLeft > xRight) {
 			return false;
 		}
 
-		if (this.y > otherBodyYTop || otherBody.y > yTop) {
+		if (yBottom > otherBodyYTop || otherBodyYBottom > yTop) {
 			return false;
 		}
 
 		return true;
+	}
+
+	this.getTransform = function () {
+		return {
+			x:	this.x,
+			y:	this.y,
+			height:	this.height,
+			width:	this.width
+		}
 	}
 }
