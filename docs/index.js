@@ -92,18 +92,22 @@ world.renderRect = true;
 var swordsmanSprite = new Image();
 swordsmanSprite.src = "./assets/swordsman.png";
 
-//initialize bodies and add to world
-var body0	=	new Body(0,100,50,50);
-var body1	=	new Body(0, 0, 50, 50);
-var body2	=	new Body(11, 22, 50, 50);
-var body3	=	new Body(22, 44, 50, 50);
+function SwordsMan(x,y,width,height,world){
+	Body.call(this,x,y,width,height,world);
+	SwordsMan.prototype = Object.create(Body.prototype);
+	SwordsMan.prototype.constructor = SwordsMan;
+	this.sprites.push(swordsmanSprite);
+	this.setCurrentSprite(0);
+	this.health = 100;
+	this.player = 0;
+	this.speed = 5;
+}
 
+//initialize bodies and add to world
 var player1Bodies = [];
 for (var i = 0, len = 5; i < len; i++) {
-	var body =  new Body(i*50,300,50,50);
+	var body =  new SwordsMan(i*50,300,50,50,world);
 
-	body.sprites.push(swordsmanSprite);
-	body.setCurrentSprite(0);
 	body.rectColor = "#f00";
 	player1Bodies.push(body)
 	world.addBodies(body);
@@ -111,10 +115,8 @@ for (var i = 0, len = 5; i < len; i++) {
 
 var aiBodies = [];
 for (var i = 0, len = 5; i < len; i++) {
-	var body =  new Body(i*50,0,50,50);
+	var body =  new SwordsMan(i*50,0,50,50,world);
 
-	body.sprites.push(swordsmanSprite);
-	body.setCurrentSprite(0);
 	body.rectColor = "#0f0";
 	aiBodies.push(body)
 	world.addBodies(body);
@@ -144,20 +146,47 @@ function updateAllBodies() {
 		if( world.bodies[i].isIntersect(mouseClickL) ){
 			if (player1Bodies.includes(world.bodies[i])){
 				selectedBodies.push(world.bodies[i]);
-				world.removeBuffer.push(world.bodies[i])
 			}
 		}
 		if( world.bodies[i].isMoving || ( mouseClickR.isClicked === true && selectedBodies.indexOf(world.bodies[i]) !== -1 ) ){
 			if (selectedCount % 2 === 0){
 				world.bodies[i].move(mouseClickR.x + (selectedCount*world.bodies[i].width) - world.bodies[i].width/2,
 										    mouseClickR.y - world.bodies[i].height/2,
-											2);
+											world.bodies[i].speed);
 			}else {
 				world.bodies[i].move(mouseClickR.x - (selectedCount*world.bodies[i].width) - world.bodies[i].width/2,
 										    mouseClickR.y - world.bodies[i].height/2,
-											2);
+											world.bodies[i].speed)
 			}
 			selectedCount++;
 		}
 	}
+
+	for(var i in player1Bodies){
+		for(var j in aiBodies){
+			if(player1Bodies[i].isIntersect(aiBodies[j])){
+				player1Bodies[i].health--;
+				aiBodies[j].health--;
+				if(player1Bodies[i].health < 0){
+					player1Bodies[i].removeFromWorld();
+				}
+				if(aiBodies[j].health < 0){
+					aiBodies[j].removeFromWorld();
+				}
+			}
+		}
+	}
+	for(var i in world.removeBuffer){
+		var index = player1Bodies.indexOf(world.removeBuffer[i]);
+		if(index > -1){
+			player1Bodies.splice(index, 1);
+			continue;
+		}
+		var index = aiBodies.indexOf(world.removeBuffer[i]);
+		if(index > -1){
+			aiBodies.splice(index, 1);
+			continue;
+		}
+	}
+
 }

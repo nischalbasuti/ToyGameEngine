@@ -4,6 +4,9 @@ function World (canvasContext) {
 	self.canvasContext = canvasContext;
 	self.bodies = [];
 
+	self.height = canvasContext.canvas.height;
+	self.width = canvasContext.canvas.width;
+
 	//push bodies to self.removeBuffer to safely remove bodies in self.update()
 	self.removeBuffer = [];
 
