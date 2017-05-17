@@ -9,7 +9,13 @@ var WorldRenderer = function (world) {
 				world.canvasContext.strokeRect(world.bodies[i].x,
 					world.bodies[i].y, 
 					world.bodies[i].width, 
-				world.bodies[i].height);
+					world.bodies[i].height);
+				if(world.bodies[i].destBody != null){
+					world.canvasContext.strokeRect(world.bodies[i].destBody.x,
+						world.bodies[i].destBody.y, 
+						world.bodies[i].destBody.width, 
+						world.bodies[i].destBody.height);
+				}
 			}
 			//draw sprite to canvas
 			world.canvasContext.drawImage(world.bodies[i].currentSprite,

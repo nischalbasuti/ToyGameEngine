@@ -1,14 +1,16 @@
 function World (canvasContext) {
 	var self = this;
 
-	this.canvasContext = canvasContext;
-	this.bodies = [];
-	this.removeBuffer = [];
-	this.worldRenderer = new WorldRenderer(this);
+	self.canvasContext = canvasContext;
+	self.bodies = [];
 
-	this.renderRect = false;
+	//push bodies to self.removeBuffer to safely remove bodies in self.update()
+	self.removeBuffer = [];
+
+	self.worldRenderer = new WorldRenderer(this);
+	self.renderRect = false;
 	
-	this.addBodies = function (body) {
+	self.addBodies = function (body) {
 		this.bodies.push(body);
 	};
 
