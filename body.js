@@ -76,14 +76,14 @@ var  Body = function (x, y, width, height, world) {
 	self.speed = 1;
 
 	self.destBody = null;
-	self.move = function(x, y, speed){
-		if(self.x > world.width){
+	self.move = function(x, y){
+		if(self.x > world.width - self.width){
 			self.x = world.width - 0.1 - self.width;
 			self.isMoving = false;
 			return;
 		}
-		if(self.y > world.height){
-			self.y = world.height - 0.1 - self.width;
+		if(self.y > world.height - self.height){
+			self.y = world.height - 0.1 - self.height;
 			self.isMoving = false;
 			return;
 		}
@@ -102,8 +102,8 @@ var  Body = function (x, y, width, height, world) {
 			self.destinationX = x + self.width/2;
 			self.destinationY = y + self.height/2;
 
-			self.stepX = ( self.destinationX - self.x )*speed/100;
-			self.stepY = ( self.destinationY - self.y )*speed/100;
+			self.stepX = ( self.destinationX - self.x )*self.speed/100;
+			self.stepY = ( self.destinationY - self.y )*self.speed/100;
 			self.destBody = new Body(self.destinationX, self.destinationY, 2, 2);
 		}
 		if (self.isIntersect(self.destBody)){
