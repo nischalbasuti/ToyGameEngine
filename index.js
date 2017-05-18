@@ -109,6 +109,7 @@ for (var i = 0, len = 5; i < len; i++) {
 	var body =  new SwordsMan(i*50,300,50,50,world);
 
 	body.rectColor = "#f00";
+	body.player = 1;
 	player1Bodies.push(body)
 	world.addBodies(body);
 }
@@ -118,6 +119,7 @@ for (var i = 0, len = 5; i < len; i++) {
 	var body =  new SwordsMan(i*50,0,50,50,world);
 
 	body.rectColor = "#0f0";
+	body.player = 2;
 	aiBodies.push(body)
 	world.addBodies(body);
 }
