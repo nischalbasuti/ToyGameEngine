@@ -12,6 +12,8 @@ function World (canvasContext) {
 
 	self.worldRenderer = new WorldRenderer(this);
 	self.renderRect = false;
+
+	self.tileSize = 2;
 	
 	self.addBodies = function (body) {
 		this.bodies.push(body);

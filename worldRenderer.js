@@ -1,28 +1,45 @@
 var WorldRenderer = function (world) {
 	this.renderWorld = function () {
+		//clearing screen
 		//world.canvasContext.clearRect(0, 0, 720, 360);
-		for (let i in world.bodies) {
+		var tileRowCount = 0;
+		var tileColCount = 0;
+		world.canvasContext.lineWidth = 0.3;
+		for(var i = 0 ; i< world.heightInTiles*world.widthInTiles; i++){
+			world.canvasContext.strokeStyle = "#828282";
+
+			if(tileColCount >= world.widthInTiles){
+				tileRowCount++;
+				tileColCount = 0;
+			}
+			world.canvasContext.strokeRect(tileColCount*world.tileSize,
+										   tileRowCount*world.tileSize, 
+										   world.tileSize, world.tileSize);
+			tileColCount++;
+		}
+		world.canvasContext.lineWidth = 1;
+		for (let body of world.bodies) {
 			if (world.renderRect === true){
-				world.canvasContext.strokeStyle = world.bodies[i].rectColor;
+				world.canvasContext.strokeStyle = body.rectColor;
 
 				//draw rectangles to canvas
-				world.canvasContext.strokeRect(world.bodies[i].x,
-					world.bodies[i].y, 
-					world.bodies[i].width, 
-					world.bodies[i].height);
-				if(world.bodies[i].destBody != null){
-					world.canvasContext.strokeRect(world.bodies[i].destBody.x,
-						world.bodies[i].destBody.y, 
-						world.bodies[i].destBody.width, 
-						world.bodies[i].destBody.height);
+				world.canvasContext.strokeRect(body.x,
+					body.y, 
+					body.width, 
+					body.height);
+				if(body.destBody != null){
+					world.canvasContext.strokeRect(body.destBody.x,
+						body.destBody.y, 
+						body.destBody.width, 
+						body.destBody.height);
 				}
 			}
 			//draw sprite to canvas
-			world.canvasContext.drawImage(world.bodies[i].currentSprite,
-										  world.bodies[i].x,
-										  world.bodies[i].y,
-										  world.bodies[i].width,
-										  world.bodies[i].height
+			world.canvasContext.drawImage(body.currentSprite,
+										  body.x,
+										  body.y,
+										  body.width,
+										  body.height
 										  );
 		}
 	}

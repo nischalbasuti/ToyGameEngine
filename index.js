@@ -1,5 +1,11 @@
 var canvas = document.getElementById('game_screen');
+canvas.width = document.body.clientWidth - document.body.clientWidth/10 - canvas.offsetTop;
+canvas.height = document.body.clientHeight - document.body.clientHeight/10 - canvas.offsetTop;
 var context = canvas.getContext('2d');
+
+var backgroundTexture = new Image();
+backgroundTexture.src = "./assets/grasstexture.jpg";
+var backgroundPattern = context.createPattern(backgroundTexture, "repeat");
 
 //setting mouse controls
 //mouse clicks or implemented in game as Body objects and the Body.isIntersect is used to handle clicks
@@ -88,70 +94,21 @@ canvas.onmousemove = function(event) {
 var world	=	new World(context);
 world.renderRect = true;
 
+//TODO: Do all this stuff in World
+world.tileSize = 5;
+world.width = world.tileSize * 150;
+world.height = world.tileSize * 90;
+world.widthInTiles = world.width/world.tileSize;
+world.heightInTiles = world.height/world.tileSize;
+canvas.width = world.width;
+canvas.height = world.height;
+
 //load all Sprites
 var swordsmanSprite = new Image();
 swordsmanSprite.src = "./assets/swordsman.png";
 
 var settlementSprite = new Image();
 settlementSprite.src = "./assets/building.png"
-
-function SwordsMan(x,y,width,height,world){
-	Body.call(this,x,y,width,height,world);
-	SwordsMan.prototype = Object.create(Body.prototype);
-	SwordsMan.prototype.constructor = SwordsMan;
-	var self = this;
-	self.sprites.push(swordsmanSprite);
-	self.setCurrentSprite(0);
-	self.health = 100;
-	self.player = 0;
-	self.speed = 5;
-	self.setPlayer = function(playerIndex){
-		switch (playerIndex) {
-			case 1:
-				self.player = 1;
-				self.rectColor = "#f00";
-				break;
-			case 2:
-				self.player = 2;
-				self.rectColor = "#0f0";
-				break;
-			
-			default:
-				self.player = 0;
-				self.rectColor = "#000";
-				break;
-		}
-	}
-}
-
-function Settlement(x,y,width,height,world){
-	Body.call(this,x,y,width,height,world);
-	Settlement.prototype = Object.create(Body.prototype);
-	Settlement.prototype.constructor = Settlement;
-	var self = this;
-	self.sprites.push(settlementSprite);
-	self.setCurrentSprite(0);
-	self.health = 1000;
-	self.player = 0;
-	self.speed = 0;
-	self.setPlayer = function(playerIndex){
-		switch (playerIndex) {
-			case 1:
-				self.player = 1;
-				self.rectColor = "#f00";
-				break;
-			case 2:
-				self.player = 2;
-				self.rectColor = "#0f0";
-				break;
-			
-			default:
-				self.player = 0;
-				self.rectColor = "#000";
-				break;
-		}
-	}
-}
 
 //initialize bodies and add to world
 var player1Bodies = [];
@@ -192,48 +149,63 @@ world.update(function () {
 });
 
 function updateAllBodies() {
-	//drawing mouse
-	world.canvasContext.clearRect(0,0,720,360);
-	world.canvasContext.strokeStyle = "#00f";
+	
+	//clearing screen
+	world.canvasContext.fillStyle = "#d8fff9";
+	world.canvasContext.fillRect(0,0,canvas.width,canvas.height);
 
+	//drawing mouse
+	world.canvasContext.strokeStyle = "#00f";
 	world.canvasContext.strokeRect(mouseClickL.x,
 								   mouseClickL.y, 
 								   mouseClickL.width,
 								   mouseClickL.height);
 	//loop through all bodies to handle selection and movement
 	var selectedCount = 0;
-	for(var i in world.bodies) {
-		if(world.bodies[i].constructor === SwordsMan){
-			if(world.bodies[i].health < 100){
-				if(world.bodies[i].player === 1 && world.bodies[i].isIntersect(player1Settlement)){
-					world.bodies[i].health += 0.5;
+	var columnCount = 0;
+	var column = 0;
+	var columnSize = 5;
+	for(var body of world.bodies) {
+		if(body.constructor === SwordsMan){
+			if(body.health < 100){
+				if(body.player === 1 && body.isIntersect(player1Settlement)){
+					body.health += 0.5;
 				}
-				if(world.bodies[i].player === 2 && world.bodies[i].isIntersect(aiSettlement)){
-					world.bodies[i].health += 0.5;
+				if(body.player === 2 && body.isIntersect(aiSettlement)){
+					body.health += 0.5;
 				}
 			}
 		}
-		if( world.bodies[i].isIntersect(mouseClickL) ){
-			if (player1Bodies.includes(world.bodies[i]) && world.bodies[i].constructor !== Settlement){
-				selectedBodies.push(world.bodies[i]);
+		if( body.isIntersect(mouseClickL) ){
+			if (player1Bodies.includes(body) && body.constructor !== Settlement){
+				selectedBodies.push(body);
 			}
 		}
-		if( world.bodies[i].isMoving || ( mouseClickR.isClicked === true && selectedBodies.indexOf(world.bodies[i]) !== -1 ) ){
-			world.bodies[i].move(mouseClickR.x + (selectedCount*world.bodies[i].width) - selectedCount*world.bodies[i].width/2-selectedCount*world.bodies[i].width, mouseClickR.y - world.bodies[i].height/2);
+
+		if( body.isMoving || ( mouseClickR.isClicked === true && selectedBodies.indexOf(body) !== -1 ) ){
+			if(columnCount % columnSize === 0){ column++;selectedCount=0 }
+			if(selectedCount%2===0){
+				body.move(mouseClickR.x - body.width - selectedCount*body.width/2, 
+				mouseClickR.y - body.height*2 + column*body.height);
+			}else {
+				body.move(mouseClickR.x - body.width + selectedCount*body.width/2, 
+				mouseClickR.y - body.height*2 + column*body.height);
+			}
 			selectedCount++;
+			columnCount++;
 		}
 	}
 
-	for(var i in player1Bodies){
-		for(var j in player2Bodies){
-			if(player1Bodies[i].isIntersect(player2Bodies[j])){
-				player1Bodies[i].health--;
-				player2Bodies[j].health--;
-				if(player1Bodies[i].health < 0){
-					player1Bodies[i].removeFromWorld();
+	for(var player1Body of player1Bodies){
+		for(var player2Body of player2Bodies){
+			if(player1Body.isIntersect(player2Body)){
+				player1Body.health--;
+				player2Body.health--;
+				if(player1Body.health < 0){
+					player1Body.removeFromWorld();
 				}
-				if(player2Bodies[j].health < 0){
-					player2Bodies[j].removeFromWorld();
+				if(player2Body.health < 0){
+					player2Body.removeFromWorld();
 				}
 			}
 		}
