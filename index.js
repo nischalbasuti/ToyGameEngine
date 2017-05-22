@@ -32,6 +32,8 @@ function resetMouseR() {
 	mouseClickR.height = 2;
 	mouseClickR.width = 2;
 	mouseClickR.isClicked = false;
+	mouseClickR.xTile = 0;
+	mouseClickL.yTile = 0;
 }
 
 //setting up left click
@@ -42,6 +44,8 @@ canvas.addEventListener('click', function (event) {
 //setting up right click
 canvas.addEventListener('contextmenu', function (event) {
 	event.preventDefault();
+	mouseClickR.xTile = Math.floor( event.pageX / world.tileSize);
+	mouseClickR.yTile = Math.floor( event.pageY / world.tileSize)-1;
 	mouseClickR.x = event.pageX - canvas.offsetLeft;
 	mouseClickR.y = event.pageY - canvas.offsetTop;
 	mouseClickR.isClicked = true;
@@ -95,13 +99,7 @@ var world	=	new World(context);
 world.renderRect = true;
 
 //TODO: Do all this stuff in World
-world.tileSize = 5;
-world.width = world.tileSize * 150;
-world.height = world.tileSize * 90;
-world.widthInTiles = world.width/world.tileSize;
-world.heightInTiles = world.height/world.tileSize;
-canvas.width = world.width;
-canvas.height = world.height;
+world.setupTiles(50, 15, 9);
 
 //load all Sprites
 var swordsmanSprite = new Image();
@@ -122,7 +120,6 @@ for (var i = 0, len = 10; i < len; i++) {
 
 	player1Bodies.push(body)
 	world.addBodies(body);
-	body.move(i*25+( world.width-len*50)/2,world.height -200);
 }
 
 var player2Bodies = [];
@@ -136,7 +133,6 @@ for (var i = 0, len = 10; i < len; i++) {
 
 	player2Bodies.push(body)
 	world.addBodies(body);
-	body.move(i*25+( world.width-len*25)/2,100);
 }
 
 
@@ -163,8 +159,9 @@ function updateAllBodies() {
 	//loop through all bodies to handle selection and movement
 	var selectedCount = 0;
 	var columnCount = 0;
-	var column = 0;
+	var column = -1;
 	var columnSize = 5;
+	var rightSide = true;
 	for(var body of world.bodies) {
 		if(body.constructor === SwordsMan){
 			if(body.health < 100){
@@ -181,15 +178,12 @@ function updateAllBodies() {
 				selectedBodies.push(body);
 			}
 		}
-
 		if( body.isMoving || ( mouseClickR.isClicked === true && selectedBodies.indexOf(body) !== -1 ) ){
 			if(columnCount % columnSize === 0){ column++;selectedCount=0 }
-			if(selectedCount%2===0){
-				body.move(mouseClickR.x - body.width - selectedCount*body.width/2, 
-				mouseClickR.y - body.height*2 + column*body.height);
+			if(selectedCount % 2 === 0){
+				body.move(mouseClickR.xTile+selectedCount, mouseClickR.yTile+column);
 			}else {
-				body.move(mouseClickR.x - body.width + selectedCount*body.width/2, 
-				mouseClickR.y - body.height*2 + column*body.height);
+				body.move(mouseClickR.xTile+selectedCount, mouseClickR.yTile+column);
 			}
 			selectedCount++;
 			columnCount++;

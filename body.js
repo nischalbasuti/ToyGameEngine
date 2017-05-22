@@ -5,6 +5,9 @@ var  Body = function (x, y, width, height, world) {
 	self.width 	= 	width;
 	self.height	= 	height;
 
+	self.xTile = x;
+	self.yTile = y;
+
 	self.rectColor = "#000";
 	
 	//must be set explicitly
@@ -59,8 +62,8 @@ var  Body = function (x, y, width, height, world) {
 
 	self.getTransform = function () {
 		return {
-			x:	self.x,
-			y:	self.y,
+			x:	self.xTile,
+			y:	self.yTile,
 			height:	self.height,
 			width:	self.width
 		}
@@ -76,39 +79,30 @@ var  Body = function (x, y, width, height, world) {
 	self.speed = 1;
 
 	self.destBody = null;
-	self.move = function(x, y){
-		if(self.x > world.width - self.width){
-			self.x = world.width - 0.1 - self.width;
-			self.isMoving = false;
-			return;
-		}
-		if(self.y > world.height - self.height){
-			self.y = world.height - 0.1 - self.height;
-			self.isMoving = false;
-			return;
-		}
-		if(self.x < 0){
-			self.x = 0.1;
-			self.isMoving = false;
-			return;
-		}
-		if(self.y < 0){
-			self.y = 0.1;
-			self.isMoving = false;
-			return;
-		}
-		if (self.isMoving === false){
-			self.isMoving = true;
-			self.destinationX = x + self.width/2;
-			self.destinationY = y + self.height/2;
+	self.path = [];
 
-			self.stepX = ( self.destinationX - self.x )*self.speed/100;
-			self.stepY = ( self.destinationY - self.y )*self.speed/100;
-			self.destBody = new Body(self.destinationX, self.destinationY, 2, 2);
+	self.pathFinder = (new Pathfinder(world)).findPath
+
+	self.move = function(x, y){
+		if(!self.isMoving){
+			self.xTile = Math.floor(self.x / world.tileSize);
+			self.yTile = Math.floor(self.y / world.tileSize);
+
+			//handle edge cases #puns
+			if(x < 0) x = 0;
+			if(y < 0) x = 0;
+			if(x >= world.widthInTiles) x = world.widthInTiles-1;
+			if(y >= world.heightInTiles) y = world.heightInTiles-1;
+
+			self.path = self.pathFinder(world.tiles[[self.xTile,self.yTile]],world.tiles[[x,y]]);
+			self.isMoving = true;
+		} else{
+			if(self.path.length <= 0){
+				self.isMoving = false;
+				return;
+			}
 		}
-		if (self.isIntersect(self.destBody)){
-			self.isMoving = false;
-		}
-		self.setPosition(self.x+self.stepX, self.y+self.stepY)
+		var nextTile = self.path.pop();
+		self.setPosition(nextTile.x*world.tileSize, nextTile.y*world.tileSize);
 	}
 }

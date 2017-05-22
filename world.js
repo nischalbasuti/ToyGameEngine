@@ -46,4 +46,19 @@ function World (canvasContext) {
 		}
 		requestAnimationFrame(self.innerUpdate)
 	};
+
+	self.tiles = [];
+	self.setupTiles = function(tileSize, widthInTiles, heightInTiles){
+		self.tileSize = tileSize;
+		self.widthInTiles = widthInTiles;
+		self.heightInTiles = heightInTiles;
+		self.width = self.canvasContext.canvas.width = widthInTiles * tileSize;
+		self.height = self.canvasContext.canvas.height = heightInTiles * tileSize;
+		
+		for(var i = 0; i < self.widthInTiles; i++){
+			for(var j = 0; j < self.heightInTiles; j++){
+				self.tiles[[i,j]] = new Tile(i,j);
+			}
+		}
+	}
 }
