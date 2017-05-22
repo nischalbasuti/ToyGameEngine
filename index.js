@@ -44,8 +44,8 @@ canvas.addEventListener('click', function (event) {
 //setting up right click
 canvas.addEventListener('contextmenu', function (event) {
 	event.preventDefault();
-	mouseClickR.xTile = Math.floor( event.pageX / world.tileSize);
-	mouseClickR.yTile = Math.floor( event.pageY / world.tileSize)-1;
+	mouseClickR.xTile = Math.floor( ( event.pageX - canvas.offsetLeft ) / world.tileSize);
+	mouseClickR.yTile = Math.floor( ( event.pageY - canvas.offsetTop ) / world.tileSize);
 	mouseClickR.x = event.pageX - canvas.offsetLeft;
 	mouseClickR.y = event.pageY - canvas.offsetTop;
 	mouseClickR.isClicked = true;
