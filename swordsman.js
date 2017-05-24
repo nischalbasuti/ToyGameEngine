@@ -7,5 +7,5 @@ function SwordsMan(x,y,width,height,world){
 	self.sprites.push(swordsmanSprite);
 	self.setCurrentSprite(0);
 	self.health = 100;
-	self.speed = 5;
+	self.speed = 3;
 }

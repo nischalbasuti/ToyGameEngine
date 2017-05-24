@@ -5,8 +5,11 @@ var  Body = function (x, y, width, height, world) {
 	self.width 	= 	width;
 	self.height	= 	height;
 
-	self.xTile = x;
-	self.yTile = y;
+	self.widthInTiles = Math.floor(width / world.tileSize);
+	self.heightInTiles = Math.floor(height / world.tileSize);
+
+	self.xTile = Math.floor(self.x / world.tileSize);
+	self.yTile = Math.floor(self.y / world.tileSize);
 
 	self.rectColor = "#000";
 	
@@ -14,9 +17,25 @@ var  Body = function (x, y, width, height, world) {
 	self.hasGravity		=	false;
 	self.hasCollision	=	false;
 
+	 self.resetTileWeights = function(){
+		for(let i = 0; i < self.widthInTiles; i++){
+			for(let j = 0; j < self.heightInTiles; j++){
+				try{
+					world.tiles[[self.xTile+i,self.yTile+j]].weight = 1;
+				}catch(e){
+					//TODO
+						console.log(e.message);
+				}
+			}
+		}
+	}
 	self.setPosition = function (x, y) {
+		//reseting previous tile
+		self.resetTileWeights();
 		self.x = x;
 		self.y = y;
+		self.xTile = Math.floor(self.x / world.tileSize);
+		self.yTile = Math.floor(self.y / world.tileSize);
 	}
 
 	self.sprites = [];
@@ -83,6 +102,7 @@ var  Body = function (x, y, width, height, world) {
 
 	self.pathFinder = (new Pathfinder(world)).findPath
 
+	var nextTile = undefined;
 	self.move = function(x, y){
 		if(!self.isMoving){
 			self.xTile = Math.floor(self.x / world.tileSize);
@@ -102,7 +122,9 @@ var  Body = function (x, y, width, height, world) {
 				return;
 			}
 		}
-		var nextTile = self.path.pop();
+		if(world.currentFrame % self.speed === 0)
+			var nextTile = self.path.pop();
+		if(nextTile === undefined) return;
 		self.setPosition(nextTile.x*world.tileSize, nextTile.y*world.tileSize);
 	}
 }

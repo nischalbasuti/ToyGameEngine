@@ -1,10 +1,10 @@
 var WorldRenderer = function (world) {
 	this.renderWorld = function () {
 		//clearing screen
-		//world.canvasContext.clearRect(0, 0, 720, 360);
+		world.canvasContext.clearRect(0, 0, world.width, world.height);
 		var tileRowCount = 0;
 		var tileColCount = 0;
-		world.canvasContext.lineWidth = 0.3;
+		world.canvasContext.lineWidth = 0.5;
 		for(var i = 0 ; i< world.heightInTiles*world.widthInTiles; i++){
 			world.canvasContext.strokeStyle = "#828282";
 

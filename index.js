@@ -9,8 +9,9 @@ var backgroundPattern = context.createPattern(backgroundTexture, "repeat");
 
 //setting mouse controls
 //mouse clicks or implemented in game as Body objects and the Body.isIntersect is used to handle clicks
-var mouseClickL	=	new Body(-1000, -1000, 2, 2);
-var mouseClickR	=	new Body(-1000, -1000, 2, 2);
+//TODO remove World dependency for mouseclick bodies
+var mouseClickL	=	new Body(-1000, -1000, 2, 2, new World(context));
+var mouseClickR	=	new Body(-1000, -1000, 2, 2, new World(context));
 mouseClickL.isClicked = false;
 mouseClickR.isClicked = false;
 
@@ -99,7 +100,7 @@ var world	=	new World(context);
 world.renderRect = true;
 
 //TODO: Do all this stuff in World
-world.setupTiles(50, 15, 9);
+world.setupTiles(32, 24, 14);
 
 //load all Sprites
 var swordsmanSprite = new Image();
@@ -110,12 +111,12 @@ settlementSprite.src = "./assets/building.png"
 
 //initialize bodies and add to world
 var player1Bodies = [];
-var player1Settlement = new Settlement(world.width/2 - 50,world.height-100,100,100,world)
+var player1Settlement = new Settlement(world.width/2 - 64,world.height-128,128,128,world)
 player1Settlement.setPlayer(1);
 player1Bodies.push(player1Settlement);
 world.addBodies(player1Settlement);
-for (var i = 0, len = 10; i < len; i++) {
-	var body =  new SwordsMan(i*50,300,50,50,world);
+for (var i = 0, len = 12; i < len; i++) {
+	var body =  new SwordsMan(i*64,world.height - 192,64,64,world);
 	body.setPlayer(1);
 
 	player1Bodies.push(body)
@@ -123,12 +124,12 @@ for (var i = 0, len = 10; i < len; i++) {
 }
 
 var player2Bodies = [];
-var aiSettlement = new Settlement(world.width/2 - 50,0,100,100,world);
+var aiSettlement = new Settlement(world.width/2 - 64,0,128,128,world);
 aiSettlement.setPlayer(2);
 player2Bodies.push(aiSettlement);
 world.addBodies(aiSettlement)
-for (var i = 0, len = 10; i < len; i++) {
-	var body =  new SwordsMan(i*50,0,50,50,world);
+for (var i = 0, len = 12; i < len; i++) {
+	var body =  new SwordsMan(i*64,128,64,64,world);
 	body.setPlayer(2);
 
 	player2Bodies.push(body)
@@ -147,8 +148,8 @@ world.update(function () {
 function updateAllBodies() {
 	
 	//clearing screen
-	world.canvasContext.fillStyle = "#d8fff9";
-	world.canvasContext.fillRect(0,0,canvas.width,canvas.height);
+	world.canvasContext.fillStyle = "#fff";
+//	world.canvasContext.fillRect(0,0,canvas.width,canvas.height);
 
 	//drawing mouse
 	world.canvasContext.strokeStyle = "#00f";
