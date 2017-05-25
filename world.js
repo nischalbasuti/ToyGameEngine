@@ -19,7 +19,6 @@ function World (canvasContext) {
 		this.bodies.push(body);
 	};
 
-	self.currentFrame = 0;
 
 	self.removeBody = function (body) {
 		console.log('removed: '+JSON.stringify(body))
@@ -35,10 +34,12 @@ function World (canvasContext) {
 	};
 
 	self.FPS = 30;
+	self.currentFrame = 0;
 	//TODO: clean up
 	self.update = function (update) {
 		self.usersUpdate = update;
 		self.innerUpdate = function () {
+			self.currentFrame++;
 			self.render();
 			self.usersUpdate();
 			for (var i in self.removeBuffer) {

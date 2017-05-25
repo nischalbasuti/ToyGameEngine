@@ -28,6 +28,7 @@ var WorldRenderer = function (world) {
 					body.width, 
 					body.height);
 				if(body.destBody != null){
+					world.canvasContext.strokeStyle = "#00f";
 					world.canvasContext.strokeRect(body.destBody.x,
 						body.destBody.y, 
 						body.destBody.width, 

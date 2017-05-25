@@ -115,16 +115,34 @@ var  Body = function (x, y, width, height, world) {
 			if(y >= world.heightInTiles) y = world.heightInTiles-1;
 
 			self.path = self.pathFinder(world.tiles[[self.xTile,self.yTile]],world.tiles[[x,y]]);
+			self.destBody = new Body(x*world.tileSize, y*world.tileSize, world.tileSize, world.tileSize, world);
 			self.isMoving = true;
 		} else{
 			if(self.path.length <= 0){
 				self.isMoving = false;
+				self.destBody = undefined;
 				return;
 			}
 		}
-		if(world.currentFrame % self.speed === 0)
+
+		if(world.currentFrame % self.speed === 0){
 			var nextTile = self.path.pop();
-		if(nextTile === undefined) return;
-		self.setPosition(nextTile.x*world.tileSize, nextTile.y*world.tileSize);
+			if(nextTile === undefined) return;
+			self.setPosition(nextTile.x*world.tileSize, nextTile.y*world.tileSize);
+		}else{
+			//interpolation
+			if(self.x < self.path[self.path.length-1].x*world.tileSize){
+				self.setPosition(self.x + world.tileSize/self.speed, self.y);
+			}
+			else if(self.x > self.path[self.path.length-1].x*world.tileSize){
+				self.setPosition(self.x - world.tileSize/self.speed, self.y);
+			}
+			if(self.y < self.path[self.path.length-1].y*world.tileSize){
+				self.setPosition(self.x, self.y + world.tileSize/self.speed);
+			}
+			else if(self.y > self.path[self.path.length-1].y*world.tileSize){
+				self.setPosition(self.x, self.y - world.tileSize/self.speed);
+			}
+		}
 	}
 }

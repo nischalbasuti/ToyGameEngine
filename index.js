@@ -116,7 +116,7 @@ player1Settlement.setPlayer(1);
 player1Bodies.push(player1Settlement);
 world.addBodies(player1Settlement);
 for (var i = 0, len = 12; i < len; i++) {
-	var body =  new SwordsMan(i*64,world.height - 192,64,64,world);
+	var body =  new SwordsMan(i*64,world.height - 192,32,32,world);
 	body.setPlayer(1);
 
 	player1Bodies.push(body)
@@ -129,7 +129,7 @@ aiSettlement.setPlayer(2);
 player2Bodies.push(aiSettlement);
 world.addBodies(aiSettlement)
 for (var i = 0, len = 12; i < len; i++) {
-	var body =  new SwordsMan(i*64,128,64,64,world);
+	var body =  new SwordsMan(i*64,128,32,32,world);
 	body.setPlayer(2);
 
 	player2Bodies.push(body)
