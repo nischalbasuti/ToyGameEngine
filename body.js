@@ -131,17 +131,19 @@ var  Body = function (x, y, width, height, world) {
 			self.setPosition(nextTile.x*world.tileSize, nextTile.y*world.tileSize);
 		}else{
 			//interpolation
-			if(self.x < self.path[self.path.length-1].x*world.tileSize){
-				self.setPosition(self.x + world.tileSize/self.speed, self.y);
-			}
-			else if(self.x > self.path[self.path.length-1].x*world.tileSize){
-				self.setPosition(self.x - world.tileSize/self.speed, self.y);
-			}
-			if(self.y < self.path[self.path.length-1].y*world.tileSize){
-				self.setPosition(self.x, self.y + world.tileSize/self.speed);
-			}
-			else if(self.y > self.path[self.path.length-1].y*world.tileSize){
-				self.setPosition(self.x, self.y - world.tileSize/self.speed);
+			if(self.path.length > 0){
+				if(self.x < self.path[self.path.length-1].x*world.tileSize){
+					self.setPosition(self.x + world.tileSize/self.speed, self.y);
+				}
+				else if(self.x > self.path[self.path.length-1].x*world.tileSize){
+					self.setPosition(self.x - world.tileSize/self.speed, self.y);
+				}
+				if(self.y < self.path[self.path.length-1].y*world.tileSize){
+					self.setPosition(self.x, self.y + world.tileSize/self.speed);
+				}
+				else if(self.y > self.path[self.path.length-1].y*world.tileSize){
+					self.setPosition(self.x, self.y - world.tileSize/self.speed);
+				}
 			}
 		}
 	}
