@@ -58,7 +58,7 @@ function World (canvasContext) {
 			for(let i = 0; i < body.widthInTiles; i++){
 				for(let j = 0; j < body.heightInTiles; j++){
 					try{
-						self.tiles[[body.xTile+i,body.yTile+j]].weight = Pathfinder.INFINITY;
+						self.tiles[[body.xTile+i,body.yTile+j]].weight = 55;
 					}catch(e){
 						console.log(e.message+"\nthis is expected to happen if part of the body is off screen");
 					}

@@ -1,6 +1,7 @@
 function Pathfinder(world){
 	var self = this;
 	var INFINITY = 1000000000;
+	self.INFINITY = INFINITY;
 
 	function reconstructPath(cameFrom, current){
 		var totalPath = [];
@@ -28,6 +29,7 @@ function Pathfinder(world){
 	function getMinFscore(openSet, fScore){
 		var lowest = INFINITY;
 		var index = undefined;
+		//TODO remove loop over openset and implement with prioority queue
 		for(var i in openSet){
 			if(fScore[openSet[i].getIndex()] < lowest){
 				lowest = fScore[openSet[i].getIndex()];
@@ -96,8 +98,8 @@ function Pathfinder(world){
 		var gScore = [];
 		var fScore = [];
 		for(var i in world.tiles) {
-			gScore[i] = (INFINITY); 
-			fScore[i] = (INFINITY); 
+			gScore[i] = INFINITY; 
+			fScore[i] = INFINITY; 
 		}
 		gScore[startTile.getIndex()] = 0;
 		fScore[startTile.getIndex()] = self.heuristicCostEstimate(startTile, endTile);
@@ -118,9 +120,13 @@ function Pathfinder(world){
 			console.log(current)
 			world.canvasContext.fillRect(current.x*world.tileSize,current.y*world.tileSize,world.tileSize,world.tileSize)
 
+			//remove current from openSet and adding to closedSet
 			openSet.splice(openSet.indexOf(current),1);
 			closedSet.push(current);
+
 			for(neighbour of self.findNeighbours(current)){
+				//check if neighbour has already been visited
+				//if not, continue
 				if(closedSet.indexOf(neighbour) > -1){
 					continue;
 				}
