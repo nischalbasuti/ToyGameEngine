@@ -6,7 +6,6 @@ function Pathfinder(world){
 	function reconstructPath(cameFrom, current){
 		var totalPath = [];
 		totalPath.push(current)
-		console.log(cameFrom);
 		world.canvasContext.lineWidth = world.tileSize;
 		world.canvasContext.fillStyle = "#00f";
 		for(let i in cameFrom){
@@ -27,16 +26,13 @@ function Pathfinder(world){
 		return totalPath;
 	}
 	function getMinFscore(openSet, fScore){
-		var lowest = INFINITY;
-		var index = undefined;
-		//TODO remove loop over openset and implement with prioority queue
-		for(var i in openSet){
-			if(fScore[openSet[i].getIndex()] < lowest){
-				lowest = fScore[openSet[i].getIndex()];
-				console.log(openSet[i].getIndex())
-				index = i;
-			}
-		}
+		//index of world.tiles[] with the lowest fScore
+		console.log("poped:"+fScore.data[0][0]);
+	//	do {
+			var lowest = fScore.pop();
+			var index = openSet.indexOf(world.tiles[lowest]);
+	//	} while (index === -1);
+
 		return {
 			'value': lowest,
 			'index': index
@@ -69,7 +65,7 @@ function Pathfinder(world){
 			var node = world.tiles[ [tile.x, tile.y+1] ];
 			neighbours.push(node);
 		}
-
+		
 		if(tile.x-1 >= 0 && tile.y-1 >= 0){
 			var node = world.tiles[ [tile.x-1, tile.y-1] ];
 			neighbours.push(node);
@@ -96,38 +92,32 @@ function Pathfinder(world){
 		var cameFrom = [];
 
 		var gScore = [];
-		var fScore = [];
+		var fScore = new PriorityQueue();
 		for(var i in world.tiles) {
-			gScore[i] = INFINITY; 
-			fScore[i] = INFINITY; 
+			gScore[i] = INFINITY;
 		}
 		gScore[startTile.getIndex()] = 0;
-		fScore[startTile.getIndex()] = self.heuristicCostEstimate(startTile, endTile);
+		fScore.push(startTile.getIndex(), self.heuristicCostEstimate(startTile, endTile));
 
 		while(openSet.length > 0){
 			var current = openSet[getMinFscore(openSet,fScore).index];
-			console.log(openSet)
-			console.log("min fscore: "+JSON.stringify(getMinFscore(openSet,fScore)));
-			if(current === undefined){
-				return [];
-			}
+
 			
 			if (current === endTile){
 				return reconstructPath(cameFrom, current);
 			}
 			world.canvasContext.lineWidth = world.tileSize;
 			world.canvasContext.fillStyle = "#f00";
-			console.log(current)
 			world.canvasContext.fillRect(current.x*world.tileSize,current.y*world.tileSize,world.tileSize,world.tileSize)
 
 			//remove current from openSet and adding to closedSet
 			openSet.splice(openSet.indexOf(current),1);
-			closedSet.push(current);
+			closedSet[current.getIndex()] = 1;
 
 			for(neighbour of self.findNeighbours(current)){
 				//check if neighbour has already been visited
 				//if not, continue
-				if(closedSet.indexOf(neighbour) > -1){
+				if(closedSet[neighbour.getIndex()] == 1){
 					continue;
 				}
 				var tempGscore = gScore[current.getIndex()] + neighbour.weight*self.heuristicCostEstimate(current, neighbour);
@@ -137,13 +127,51 @@ function Pathfinder(world){
 				else if(tempGscore >= gScore[neighbour]){
 					continue;
 				}
+				console.log("pushed"+neighbour.getIndex())
 
 				cameFrom[neighbour.getIndex()] = current;
 				gScore[neighbour.getIndex()] = tempGscore;
-				fScore[neighbour.getIndex()] = gScore[neighbour.getIndex()] + self.heuristicCostEstimate(neighbour, endTile);
+				fScore.push(neighbour.getIndex(), gScore[neighbour.getIndex()] + self.heuristicCostEstimate(neighbour, endTile) );
 			}
 		}
-		console.log("failed to find path");
 		return "failed to find path";
+	}
+	//only for elements which are arrays of length 2, and whose elements can be compared with ===
+	//only one of each element is allowed
+	//TODO: find a proper name
+	function PriorityQueue() {
+		var self = this;
+		self.data = [];
+		self.push = function(element, priority){
+			for(let datum of self.data){
+				//checking if element is in self.data[]
+				if(datum[0][0] === element[0] && datum[0][1] === element[1]){
+					//if element exists in self.data[], update it's priority
+					datum[1] = priority;
+					return true;
+				}
+			}
+			var priority =  priority;
+			for(var i = 0; i < self.data.length && self.data[i][1] < priority;i++);
+			self.data.splice(i, 0,[element, priority]);
+		}
+
+		self.pop = function(){
+			if(self.data.length > 0)
+				return self.data.shift()[0];
+		}
+
+		self.size = function(){
+			return self.data.length;
+		}
+		self.contains = function(element){
+			for(let datum of self.data){
+				//comparing the x and y of each thing
+				if(datum[0][0] === element[0] && datum[0][1] === element[1]){
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }
