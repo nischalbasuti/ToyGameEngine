@@ -26,12 +26,11 @@ function Pathfinder(world){
 		return totalPath;
 	}
 	function getMinFscore(openSet, fScore){
-		//index of world.tiles[] with the lowest fScore
-		console.log("poped:"+fScore.data[0][0]);
-	//	do {
+		//console.log("poped:"+fScore.data[0][0]);
+		do{
 			var lowest = fScore.pop();
 			var index = openSet.indexOf(world.tiles[lowest]);
-	//	} while (index === -1);
+		}while(index === -1)
 
 		return {
 			'value': lowest,
@@ -101,11 +100,11 @@ function Pathfinder(world){
 
 		while(openSet.length > 0){
 			var current = openSet[getMinFscore(openSet,fScore).index];
-
 			
 			if (current === endTile){
 				return reconstructPath(cameFrom, current);
 			}
+
 			world.canvasContext.lineWidth = world.tileSize;
 			world.canvasContext.fillStyle = "#f00";
 			world.canvasContext.fillRect(current.x*world.tileSize,current.y*world.tileSize,world.tileSize,world.tileSize)
@@ -117,7 +116,7 @@ function Pathfinder(world){
 			for(neighbour of self.findNeighbours(current)){
 				//check if neighbour has already been visited
 				//if not, continue
-				if(closedSet[neighbour.getIndex()] == 1){
+				if(closedSet[neighbour.getIndex()] === 1){
 					continue;
 				}
 				var tempGscore = gScore[current.getIndex()] + neighbour.weight*self.heuristicCostEstimate(current, neighbour);
@@ -127,7 +126,7 @@ function Pathfinder(world){
 				else if(tempGscore >= gScore[neighbour]){
 					continue;
 				}
-				console.log("pushed"+neighbour.getIndex())
+				//console.log("pushed"+neighbour.getIndex())
 
 				cameFrom[neighbour.getIndex()] = current;
 				gScore[neighbour.getIndex()] = tempGscore;
@@ -143,15 +142,14 @@ function Pathfinder(world){
 		var self = this;
 		self.data = [];
 		self.push = function(element, priority){
-			for(let datum of self.data){
+			for(let i in self.data){
 				//checking if element is in self.data[]
-				if(datum[0][0] === element[0] && datum[0][1] === element[1]){
-					//if element exists in self.data[], update it's priority
-					datum[1] = priority;
-					return true;
+				if(self.data[i][0][0] === element[0] && self.data[i][0][1] === element[1]){
+					//remove old element, new element will be added after break
+					self.data.splice(i,1);
+					break;
 				}
 			}
-			var priority =  priority;
 			for(var i = 0; i < self.data.length && self.data[i][1] < priority;i++);
 			self.data.splice(i, 0,[element, priority]);
 		}
