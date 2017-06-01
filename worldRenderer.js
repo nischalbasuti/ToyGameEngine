@@ -1,3 +1,4 @@
+"use strict";
 var WorldRenderer = function (world) {
 	this.renderWorld = function () {
 		//clearing screen

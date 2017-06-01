@@ -1,3 +1,4 @@
+"use strict";
 var canvas = document.getElementById('game_screen');
 canvas.width = document.body.clientWidth - document.body.clientWidth/10 - canvas.offsetTop;
 canvas.height = document.body.clientHeight - document.body.clientHeight/10 - canvas.offsetTop;

@@ -1,3 +1,4 @@
+"use strict";
 function Settlement(x,y,width,height,world){
 	Unit.call(this,x,y,width,height,world);
 	Settlement.prototype = Object.create(Unit.prototype);

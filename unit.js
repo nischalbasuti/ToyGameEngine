@@ -1,3 +1,4 @@
+"use strict";
 function Unit(x,y,width,height,world){
 	Body.call(this,x,y,width,height,world);
 	Unit.prototype = Object.create(Body.prototype);

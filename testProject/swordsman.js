@@ -1,3 +1,4 @@
+"use strict";
 function SwordsMan(x,y,width,height,world){
 	Unit.call(this,x,y,width,height,world);
 	SwordsMan.prototype = Object.create(Unit.prototype);

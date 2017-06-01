@@ -1,3 +1,4 @@
+"use strict";
 function World (canvasContext) {
 	var self = this;
 

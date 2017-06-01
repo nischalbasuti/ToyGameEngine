@@ -1,3 +1,4 @@
+"use strict";
 var  Body = function (x, y, width, height, world) {
 	var self = this;
 	self.x 		= 	x;

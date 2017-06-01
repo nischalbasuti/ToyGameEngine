@@ -1,3 +1,4 @@
+"use strict";
 function Pathfinder(world){
 	var self = this;
 	var INFINITY = 1000000000;
@@ -113,7 +114,7 @@ function Pathfinder(world){
 			openSet.splice(openSet.indexOf(current),1);
 			closedSet[current.getIndex()] = 1;
 
-			for(neighbour of self.findNeighbours(current)){
+			for(let neighbour of self.findNeighbours(current)){
 				//check if neighbour has already been visited
 				//if not, continue
 				if(closedSet[neighbour.getIndex()] === 1){
