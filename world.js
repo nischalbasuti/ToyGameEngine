@@ -41,13 +41,13 @@ function World (canvasContext) {
 		self.usersUpdate = update;
 		self.innerUpdate = function () {
 			self.currentFrame++;
+			self.updateTiles();
 			self.render();
 			self.usersUpdate();
 			for (var i in self.removeBuffer) {
 				self.removeBody(self.removeBuffer[i]);
 			}
 			self.removeBuffer = [];
-			self.updateTiles();
 
 			requestAnimationFrame(self.innerUpdate);
 		}
@@ -55,6 +55,7 @@ function World (canvasContext) {
 	};
 	self.updateTiles = function(){
 		for(let body of self.bodies){
+			body.currentAnimation();
 			self.tiles[[body.xTile,body.yTile]].weight = Pathfinder.INFINITY;
 			for(let i = 0; i < body.widthInTiles; i++){
 				for(let j = 0; j < body.heightInTiles; j++){

@@ -31,7 +31,7 @@ var  Body = function (x, y, width, height, world) {
 		}
 	}
 	self.setPosition = function (x, y) {
-		//reseting previous tile
+		//resetting previous tile weights
 		self.resetTileWeights();
 		self.x = x;
 		self.y = y;
@@ -42,13 +42,29 @@ var  Body = function (x, y, width, height, world) {
 	self.sprites = [];
 	self.currentSprite;
 
+	self.setCurrentSprite = function (index) {
+		self.currentSprite = self.sprites[index];
+	}
+
 	self.removeFromWorld = function(){
 		world.removeBuffer.push(self);
 	}
 
-	self.setCurrentSprite = function (index) {
-		self.currentSprite = self.sprites[index];
-	}
+	self.animations = {};
+
+	var spriteIndex = 0;
+	self.addAnimation = function(name, spritesIndexList, framerate){
+		self.animations[name] = function(){
+			if(world.currentFrame % framerate === 0){
+				if(spriteIndex > spritesIndexList.length - 1){
+					spriteIndex = 0;
+				}
+				self.setCurrentSprite(spritesIndexList[spriteIndex++]);
+			}
+		};
+	};
+	self.addAnimation('default', [0], 30);
+	self.currentAnimation = self.animations.default;
 
 	self.isIntersect = function (otherBody, log) {
 		//IMP: canvas is represented as being in the 4th Quadrant, so y is -ve
@@ -101,7 +117,8 @@ var  Body = function (x, y, width, height, world) {
 	self.destBody = null;
 	self.path = [];
 
-	self.pathFinder = (new Pathfinder(world)).findPath
+	//TODO dont initialize for each new object
+	self.pathFinder = (new Pathfinder(world)).findPath;
 
 	var nextTile = undefined;
 	self.move = function(x, y){

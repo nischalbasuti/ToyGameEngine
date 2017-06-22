@@ -107,6 +107,9 @@ world.setupTiles(32, 24, 14);
 var swordsmanSprite = new Image();
 swordsmanSprite.src = "./assets/swordsman.png";
 
+var swordsmanSprite1 = new Image();
+swordsmanSprite1.src = "./assets/swordsman1.png";
+
 var settlementSprite = new Image();
 settlementSprite.src = "./assets/building.png"
 
@@ -181,6 +184,7 @@ function updateAllBodies() {
 			}
 		}
 		if( body.isMoving || ( mouseClickR.isClicked === true && selectedBodies.indexOf(body) !== -1 ) ){
+			body.currentAnimation = body.animations.walk;
 			if(columnCount % columnSize === 0){ column++;selectedCount=0 }
 			if(selectedCount % 2 === 0){
 				body.move(mouseClickR.xTile+selectedCount, mouseClickR.yTile+column);
@@ -189,6 +193,8 @@ function updateAllBodies() {
 			}
 			selectedCount++;
 			columnCount++;
+		}else{
+			body.currentAnimation = body.animations.default;
 		}
 	}
 
