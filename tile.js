@@ -4,7 +4,7 @@ function Tile(x, y, weight, tileSize){
 	this.y = y;
 	this.weight = weight;
 	this.side = tileSize;
-	this.getIndex = function(){
+	this.getIndex = () => {
 		return [this.x, this.y];
 	}
 }

@@ -1,6 +1,6 @@
 "use strict";
 var WorldRenderer = function (world) {
-	this.renderWorld = function () {
+	this.renderWorld = () => {
 		//clearing screen
 		world.canvasContext.clearRect(0, 0, world.width, world.height);
 		var tileRowCount = 0;

@@ -1,28 +1,27 @@
 "use strict";
 var  Body = function (x, y, width, height, world) {
-	var self = this;
-	self.x 		= 	x;
-	self.y 		= 	y;
-	self.width 	= 	width;
-	self.height	= 	height;
+	this.x 		= 	x;
+	this.y 		= 	y;
+	this.width 	= 	width;
+	this.height	= 	height;
 
-	self.widthInTiles = Math.floor(width / world.tileSize);
-	self.heightInTiles = Math.floor(height / world.tileSize);
+	this.widthInTiles = Math.floor(width / world.tileSize);
+	this.heightInTiles = Math.floor(height / world.tileSize);
 
-	self.xTile = Math.floor(self.x / world.tileSize);
-	self.yTile = Math.floor(self.y / world.tileSize);
+	this.xTile = Math.floor(this.x / world.tileSize);
+	this.yTile = Math.floor(this.y / world.tileSize);
 
-	self.rectColor = "#000";
+	this.rectColor = "#000";
 	
 	//must be set explicitly
-	self.hasGravity		=	false;
-	self.hasCollision	=	false;
+	this.hasGravity		=	false;
+	this.hasCollision	=	false;
 
-	 self.resetTileWeights = function(){
-		for(let i = 0; i < self.widthInTiles; i++){
-			for(let j = 0; j < self.heightInTiles; j++){
+	 this.resetTileWeights = () => {
+		for(let i = 0; i < this.widthInTiles; i++){
+			for(let j = 0; j < this.heightInTiles; j++){
 				try{
-					world.tiles[[self.xTile+i,self.yTile+j]].weight = 1;
+					world.tiles[[this.xTile+i,this.yTile+j]].weight = 1;
 				}catch(e){
 					//TODO
 						console.log(e.message);
@@ -30,53 +29,53 @@ var  Body = function (x, y, width, height, world) {
 			}
 		}
 	}
-	self.setPosition = function (x, y) {
+	this.setPosition =  (x, y) => {
 		//resetting previous tile weights
-		self.resetTileWeights();
-		self.x = x;
-		self.y = y;
-		self.xTile = Math.floor(self.x / world.tileSize);
-		self.yTile = Math.floor(self.y / world.tileSize);
+		this.resetTileWeights();
+		this.x = x;
+		this.y = y;
+		this.xTile = Math.floor(this.x / world.tileSize);
+		this.yTile = Math.floor(this.y / world.tileSize);
 	}
 
-	self.sprites = [];
-	self.currentSprite;
+	this.sprites = [];
+	this.currentSprite;
 
-	self.setCurrentSprite = function (index) {
-		self.currentSprite = self.sprites[index];
+	this.setCurrentSprite = (index) => {
+		this.currentSprite = this.sprites[index];
 	}
 
-	self.removeFromWorld = function(){
-		world.removeBuffer.push(self);
+	this.removeFromWorld = () => {
+		world.removeBuffer.push(this);
 	}
 
-	self.animations = {};
+	this.animations = {};
 
 	var spriteIndex = 0;
-	self.addAnimation = function(name, spritesIndexList, framerate){
-		self.animations[name] = function(){
+	this.addAnimation = (name, spritesIndexList, framerate) => {
+		this.animations[name] = () => {
 			if(world.currentFrame % framerate === 0){
 				if(spriteIndex > spritesIndexList.length - 1){
 					spriteIndex = 0;
 				}
-				self.setCurrentSprite(spritesIndexList[spriteIndex++]);
+				this.setCurrentSprite(spritesIndexList[spriteIndex++]);
 			}
 		};
 	};
-	self.addAnimation('default', [0], 30);
-	self.currentAnimation = self.animations.default;
+	this.addAnimation('default', [0], 30);
+	this.currentAnimation = this.animations.default;
 
-	self.isIntersect = function (otherBody, log) {
+	this.isIntersect = (otherBody, log) => {
 		//IMP: canvas is represented as being in the 4th Quadrant, so y is -ve
 		if (log === true) {
 			console.log(otherBody);
 		}
 
-		var xLeft 	= 	self.x;
-		var yTop	=	-self.y;
+		var xLeft 	= 	this.x;
+		var yTop	=	-this.y;
 		
-		var xRight		= 	self.x + self.width;
-		var yBottom		=	-(self.y + self.height);
+		var xRight		= 	this.x + this.width;
+		var yBottom		=	-(this.y + this.height);
 
 		var otherBodyXLeft	=	otherBody.x;
 		var otherBodyYTop	=	-otherBody.y;
@@ -96,35 +95,35 @@ var  Body = function (x, y, width, height, world) {
 		return true;
 	}
 
-	self.getTransform = function () {
+	this.getTransform = () => {
 		return {
-			x:	self.xTile,
-			y:	self.yTile,
-			height:	self.height,
-			width:	self.width
+			x:	this.xTile,
+			y:	this.yTile,
+			height:	this.height,
+			width:	this.width
 		}
 	}
 
-	self.isMoving = false;
-	self.destinationX = 0;
-	self.destinationY = 0;
+	this.isMoving = false;
+	this.destinationX = 0;
+	this.destinationY = 0;
 
-	self.stepX = 0;
-	self.stepY = 0;
+	this.stepX = 0;
+	this.stepY = 0;
 
-	self.speed = 1;
+	this.speed = 1;
 
-	self.destBody = null;
-	self.path = [];
+	this.destBody = null;
+	this.path = [];
 
 	//TODO dont initialize for each new object
-	self.pathFinder = (new Pathfinder(world)).findPath;
+	this.pathFinder = (new Pathfinder(world)).findPath;
 
 	var nextTile = undefined;
-	self.move = function(x, y){
-		if(!self.isMoving){
-			self.xTile = Math.floor(self.x / world.tileSize);
-			self.yTile = Math.floor(self.y / world.tileSize);
+	this.move = (x, y) => {
+		if(!this.isMoving){
+			this.xTile = Math.floor(this.x / world.tileSize);
+			this.yTile = Math.floor(this.y / world.tileSize);
 
 			//handle edge cases #puns
 			if(x < 0) x = 0;
@@ -132,35 +131,35 @@ var  Body = function (x, y, width, height, world) {
 			if(x >= world.widthInTiles) x = world.widthInTiles-1;
 			if(y >= world.heightInTiles) y = world.heightInTiles-1;
 
-			self.path = self.pathFinder(world.tiles[[self.xTile,self.yTile]],world.tiles[[x,y]]);
-			self.destBody = new Body(x*world.tileSize, y*world.tileSize, world.tileSize, world.tileSize, world);
-			self.isMoving = true;
+			this.path = this.pathFinder(world.tiles[[this.xTile,this.yTile]],world.tiles[[x,y]]);
+			this.destBody = new Body(x*world.tileSize, y*world.tileSize, world.tileSize, world.tileSize, world);
+			this.isMoving = true;
 		} else{
-			if(self.path.length <= 0){
-				self.isMoving = false;
-				self.destBody = undefined;
+			if(this.path.length <= 0){
+				this.isMoving = false;
+				this.destBody = undefined;
 				return;
 			}
 		}
 
-		if(world.currentFrame % self.speed === 0){
-			var nextTile = self.path.pop();
+		if(world.currentFrame % this.speed === 0){
+			var nextTile = this.path.pop();
 			if(nextTile === undefined) return;
-			self.setPosition(nextTile.x*world.tileSize, nextTile.y*world.tileSize);
+			this.setPosition(nextTile.x*world.tileSize, nextTile.y*world.tileSize);
 		}else{
 			//interpolation
-			if(self.path.length > 0){
-				if(self.x < self.path[self.path.length-1].x*world.tileSize){
-					self.setPosition(self.x + world.tileSize/self.speed, self.y);
+			if(this.path.length > 0){
+				if(this.x < this.path[this.path.length-1].x*world.tileSize){
+					this.setPosition(this.x + world.tileSize/this.speed, this.y);
 				}
-				else if(self.x > self.path[self.path.length-1].x*world.tileSize){
-					self.setPosition(self.x - world.tileSize/self.speed, self.y);
+				else if(this.x > this.path[this.path.length-1].x*world.tileSize){
+					this.setPosition(this.x - world.tileSize/this.speed, this.y);
 				}
-				if(self.y < self.path[self.path.length-1].y*world.tileSize){
-					self.setPosition(self.x, self.y + world.tileSize/self.speed);
+				if(this.y < this.path[this.path.length-1].y*world.tileSize){
+					this.setPosition(this.x, this.y + world.tileSize/this.speed);
 				}
-				else if(self.y > self.path[self.path.length-1].y*world.tileSize){
-					self.setPosition(self.x, self.y - world.tileSize/self.speed);
+				else if(this.y > this.path[this.path.length-1].y*world.tileSize){
+					this.setPosition(this.x, this.y - world.tileSize/this.speed);
 				}
 			}
 		}

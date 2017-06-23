@@ -1,8 +1,7 @@
 "use strict";
 function Pathfinder(world){
-	var self = this;
 	var INFINITY = 1000000000;
-	self.INFINITY = INFINITY;
+	this.INFINITY = INFINITY;
 
 	function reconstructPath(cameFrom, current){
 		var totalPath = [];
@@ -38,7 +37,7 @@ function Pathfinder(world){
 			'index': index
 		};
 	}
-	self.heuristicCostEstimate = function (startTile, endTile){
+	this.heuristicCostEstimate = (startTile, endTile) => {
 		//euclidian distance
 		return Math.sqrt(Math.pow(startTile.x - endTile.x, 2) + Math.pow(startTile.y - endTile.y, 2));
 		//diagonal distance
@@ -47,7 +46,7 @@ function Pathfinder(world){
 		return Math.abs(startTile.x - endTile.x) + Math.abs(startTile.y - endTile.y);
 	}
 
-	self.findNeighbours = function(tile) {
+	this.findNeighbours = (tile) => {
 		var neighbours = [];
 		if(tile.x-1 >= 0){
 			var node = world.tiles[ [tile.x-1, tile.y] ];
@@ -85,7 +84,7 @@ function Pathfinder(world){
 		return neighbours;
 	}
 
-	self.findPath = function(startTile, endTile){
+	this.findPath = (startTile, endTile) => {
 		var closedSet = [];
 		var openSet = [];
 		openSet.push(startTile);
@@ -97,7 +96,7 @@ function Pathfinder(world){
 			gScore[i] = INFINITY;
 		}
 		gScore[startTile.getIndex()] = 0;
-		fScore.push(startTile.getIndex(), self.heuristicCostEstimate(startTile, endTile));
+		fScore.push(startTile.getIndex(), this.heuristicCostEstimate(startTile, endTile));
 
 		while(openSet.length > 0){
 			var current = openSet[getMinFscore(openSet,fScore).index];
@@ -114,13 +113,13 @@ function Pathfinder(world){
 			openSet.splice(openSet.indexOf(current),1);
 			closedSet[current.getIndex()] = 1;
 
-			for(let neighbour of self.findNeighbours(current)){
+			for(let neighbour of this.findNeighbours(current)){
 				//check if neighbour has already been visited
 				//if not, continue
 				if(closedSet[neighbour.getIndex()] === 1){
 					continue;
 				}
-				var tempGscore = gScore[current.getIndex()] + neighbour.weight*self.heuristicCostEstimate(current, neighbour);
+				var tempGscore = gScore[current.getIndex()] + neighbour.weight*this.heuristicCostEstimate(current, neighbour);
 				if (openSet.indexOf(neighbour) === -1){
 					openSet.push(neighbour);
 				}
@@ -131,7 +130,7 @@ function Pathfinder(world){
 
 				cameFrom[neighbour.getIndex()] = current;
 				gScore[neighbour.getIndex()] = tempGscore;
-				fScore.push(neighbour.getIndex(), gScore[neighbour.getIndex()] + self.heuristicCostEstimate(neighbour, endTile) );
+				fScore.push(neighbour.getIndex(), gScore[neighbour.getIndex()] + this.heuristicCostEstimate(neighbour, endTile) );
 			}
 		}
 		return "failed to find path";
@@ -140,31 +139,30 @@ function Pathfinder(world){
 	//only one of each element is allowed
 	//TODO: find a proper name
 	function PriorityQueue() {
-		var self = this;
-		self.data = [];
-		self.push = function(element, priority){
-			for(let i in self.data){
-				//checking if element is in self.data[]
-				if(self.data[i][0][0] === element[0] && self.data[i][0][1] === element[1]){
+		this.data = [];
+		this.push = (element, priority) => {
+			for(let i in this.data){
+				//checking if element is in this.data[]
+				if(this.data[i][0][0] === element[0] && this.data[i][0][1] === element[1]){
 					//remove old element, new element will be added after break
-					self.data.splice(i,1);
+					this.data.splice(i,1);
 					break;
 				}
 			}
-			for(var i = 0; i < self.data.length && self.data[i][1] < priority;i++);
-			self.data.splice(i, 0,[element, priority]);
+			for(var i = 0; i < this.data.length && this.data[i][1] < priority;i++);
+			this.data.splice(i, 0,[element, priority]);
 		}
 
-		self.pop = function(){
-			if(self.data.length > 0)
-				return self.data.shift()[0];
+		this.pop = function(){
+			if(this.data.length > 0)
+				return this.data.shift()[0];
 		}
 
-		self.size = function(){
-			return self.data.length;
+		this.size = () => {
+			return this.data.length;
 		}
-		self.contains = function(element){
-			for(let datum of self.data){
+		this.contains = (element) => {
+			for(let datum of this.data){
 				//comparing the x and y of each thing
 				if(datum[0][0] === element[0] && datum[0][1] === element[1]){
 					return true;
