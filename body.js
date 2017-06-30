@@ -11,13 +11,51 @@ var  Body = function (x, y, width, height, world) {
 	this.xTile = Math.floor(this.x / world.tileSize);
 	this.yTile = Math.floor(this.y / world.tileSize);
 
-	this.rectColor = "#000";
-	
-	//must be set explicitly
+	this.rectColor 		= "#000";
 	this.hasGravity		=	false;
 	this.hasCollision	=	false;
 
-	 this.resetTileWeights = () => {
+	this.removeFromWorld = () => {
+		world.removeBuffer.push(this);
+	}
+
+	this.sprites 	= [];
+	this.animations = {};
+	this.currentSprite;
+
+	this.setCurrentSprite = (index) => {
+		this.currentSprite = this.sprites[index];
+	}
+
+
+	//index of spritesIndexList used in body.addAnimation()
+	var spriteIndex = 0;
+
+	//add new animation specifing it's name, indices of sprites stored in body.sprites[] and framerate of animation
+	this.addAnimation = (name, spritesIndexList, framerate) => {
+		//body.animations[<name>]() is called in each frame to update body.currentSprite, which is then rendered
+		this.animations[name] = () => {
+			if (world.currentFrame % framerate === 0) {
+				if (spriteIndex > spritesIndexList.length - 1) { spriteIndex = 0; }
+				this.setCurrentSprite(spritesIndexList[spriteIndex++]);
+			}
+		};
+	};
+
+	this.setCurrentAnimation = (animationName) => {
+		this.currentAnimation = this.animations[animationName];
+	};
+
+	this.addAnimation('default', [0], 30);
+	this.currentAnimation = this.animations.default;
+	this.speed = 1;
+	this.isMoving = false;
+
+	//TODO dont initialize for each new object
+	this.pathFinder = (new Pathfinder(world)).findPath;
+	this.path = [];
+
+	var resetTileWeights = () => {
 		for(let i = 0; i < this.widthInTiles; i++){
 			for(let j = 0; j < this.heightInTiles; j++){
 				try{
@@ -29,97 +67,16 @@ var  Body = function (x, y, width, height, world) {
 			}
 		}
 	}
+
 	this.setPosition =  (x, y) => {
 		//resetting previous tile weights
-		this.resetTileWeights();
+		resetTileWeights();
 		this.x = x;
 		this.y = y;
 		this.xTile = Math.floor(this.x / world.tileSize);
 		this.yTile = Math.floor(this.y / world.tileSize);
 	}
 
-	this.sprites = [];
-	this.currentSprite;
-
-	this.setCurrentSprite = (index) => {
-		this.currentSprite = this.sprites[index];
-	}
-
-	this.removeFromWorld = () => {
-		world.removeBuffer.push(this);
-	}
-
-	this.animations = {};
-
-	var spriteIndex = 0;
-	this.addAnimation = (name, spritesIndexList, framerate) => {
-		this.animations[name] = () => {
-			if(world.currentFrame % framerate === 0){
-				if(spriteIndex > spritesIndexList.length - 1){
-					spriteIndex = 0;
-				}
-				this.setCurrentSprite(spritesIndexList[spriteIndex++]);
-			}
-		};
-	};
-	this.addAnimation('default', [0], 30);
-	this.currentAnimation = this.animations.default;
-
-	this.isIntersect = (otherBody, log) => {
-		//IMP: canvas is represented as being in the 4th Quadrant, so y is -ve
-		if (log === true) {
-			console.log(otherBody);
-		}
-
-		var xLeft 	= 	this.x;
-		var yTop	=	-this.y;
-		
-		var xRight		= 	this.x + this.width;
-		var yBottom		=	-(this.y + this.height);
-
-		var otherBodyXLeft	=	otherBody.x;
-		var otherBodyYTop	=	-otherBody.y;
-
-		var otherBodyXRight		=	otherBody.x + otherBody.width;
-		var otherBodyYBottom	=	-(otherBody.y + otherBody.height);
-
-
-		if (xLeft > otherBodyXRight || otherBodyXLeft > xRight) {
-			return false;
-		}
-
-		if (yBottom > otherBodyYTop || otherBodyYBottom > yTop) {
-			return false;
-		}
-
-		return true;
-	}
-
-	this.getTransform = () => {
-		return {
-			x:	this.xTile,
-			y:	this.yTile,
-			height:	this.height,
-			width:	this.width
-		}
-	}
-
-	this.isMoving = false;
-	this.destinationX = 0;
-	this.destinationY = 0;
-
-	this.stepX = 0;
-	this.stepY = 0;
-
-	this.speed = 1;
-
-	this.destBody = null;
-	this.path = [];
-
-	//TODO dont initialize for each new object
-	this.pathFinder = (new Pathfinder(world)).findPath;
-
-	var nextTile = undefined;
 	this.move = (x, y) => {
 		if(!this.isMoving){
 			this.xTile = Math.floor(this.x / world.tileSize);
@@ -132,12 +89,10 @@ var  Body = function (x, y, width, height, world) {
 			if(y >= world.heightInTiles) y = world.heightInTiles-1;
 
 			this.path = this.pathFinder(world.tiles[[this.xTile,this.yTile]],world.tiles[[x,y]]);
-			this.destBody = new Body(x*world.tileSize, y*world.tileSize, world.tileSize, world.tileSize, world);
 			this.isMoving = true;
 		} else{
 			if(this.path.length <= 0){
 				this.isMoving = false;
-				this.destBody = undefined;
 				return;
 			}
 		}
@@ -162,6 +117,15 @@ var  Body = function (x, y, width, height, world) {
 					this.setPosition(this.x, this.y - world.tileSize/this.speed);
 				}
 			}
+		}
+	}
+
+	this.getTransform = () => {
+		return {
+			x:	this.xTile,
+			y:	this.yTile,
+			height:	this.height,
+			width:	this.width
 		}
 	}
 }

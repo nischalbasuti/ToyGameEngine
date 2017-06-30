@@ -170,21 +170,21 @@ function updateAllBodies() {
 	for(var body of world.bodies) {
 		if(body.constructor === SwordsMan){
 			if(body.health < 100){
-				if(body.player === 1 && body.isIntersect(player1Settlement)){
+				if(body.player === 1 && isIntersect(body, player1Settlement)){
 					body.health += 0.5;
 				}
-				if(body.player === 2 && body.isIntersect(aiSettlement)){
+				if(body.player === 2 && isIntersect(body, aiSettlement)){
 					body.health += 0.5;
 				}
 			}
 		}
-		if( body.isIntersect(mouseClickL) ){
+		if( isIntersect(body, mouseClickL) ){
 			if (player1Bodies.includes(body) && body.constructor !== Settlement){
 				selectedBodies.push(body);
 			}
 		}
 		if( body.isMoving || ( mouseClickR.isClicked === true && selectedBodies.indexOf(body) !== -1 ) ){
-			body.currentAnimation = body.animations.walk;
+			body.setCurrentAnimation('walk');
 			if(columnCount % columnSize === 0){ column++;selectedCount=0 }
 			if(selectedCount % 2 === 0){
 				body.move(mouseClickR.xTile+selectedCount, mouseClickR.yTile+column);
@@ -194,13 +194,13 @@ function updateAllBodies() {
 			selectedCount++;
 			columnCount++;
 		}else{
-			body.currentAnimation = body.animations.default;
+			body.setCurrentAnimation('default');
 		}
 	}
 
 	for(var player1Body of player1Bodies){
 		for(var player2Body of player2Bodies){
-			if(player1Body.isIntersect(player2Body)){
+			if(isIntersect(player1Body, player2Body)){
 				player1Body.health--;
 				player2Body.health--;
 				if(player1Body.health < 0){

@@ -7,6 +7,7 @@ function SwordsMan(x,y,width,height,world){
 	this.sprites.push(swordsmanSprite);
 	this.sprites.push(swordsmanSprite1);
 	this.setCurrentSprite(0);
+
 	this.health = 100;
 	this.speed = 10;
 
