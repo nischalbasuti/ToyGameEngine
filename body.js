@@ -55,7 +55,7 @@ var  Body = function (x, y, width, height, world) {
 	this.pathFinder = (new Pathfinder(world)).findPath;
 	this.path = [];
 
-	var resetTileWeights = () => {
+	this.resetTileWeights = () => {
 		for(let i = 0; i < this.widthInTiles; i++){
 			for(let j = 0; j < this.heightInTiles; j++){
 				try{
@@ -70,7 +70,7 @@ var  Body = function (x, y, width, height, world) {
 
 	this.setPosition =  (x, y) => {
 		//resetting previous tile weights
-		resetTileWeights();
+		this.resetTileWeights();
 		this.x = x;
 		this.y = y;
 		this.xTile = Math.floor(this.x / world.tileSize);
