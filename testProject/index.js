@@ -1,6 +1,6 @@
 "use strict";
 var canvas = document.getElementById('game_screen');
-canvas.width = document.body.clientWidth - document.body.clientWidth/10 - canvas.offsetTop;
+canvas.width = document.body.clientWidth - document.body.clientWidth/10 - canvas.offsetLeft;
 canvas.height = document.body.clientHeight - document.body.clientHeight/10 - canvas.offsetTop;
 var context = canvas.getContext('2d');
 
