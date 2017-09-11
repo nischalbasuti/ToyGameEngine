@@ -5,6 +5,7 @@ function Unit(x,y,width,height,world){
     Unit.prototype.constructor = Unit;
 
     this.player = 0;
+    this.rectColor = "#00f";
     this.setPlayer = (playerIndex) => {
         switch (playerIndex) {
             case 1:
@@ -14,11 +15,6 @@ function Unit(x,y,width,height,world){
             case 2:
                 this.player = 2;
                 this.rectColor = "#0f0";
-                break;
-            
-            default:
-                this.player = 0;
-                this.rectColor = "#000";
                 break;
         }
     }

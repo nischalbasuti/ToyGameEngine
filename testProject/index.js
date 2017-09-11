@@ -104,11 +104,6 @@ world.renderRect = true;
 world.setupTiles(32, 24, 14);
 
 //load all Sprites
-var swordsmanSprite = new Image();
-swordsmanSprite.src = "./assets/swordsman.png";
-
-var swordsmanSprite1 = new Image();
-swordsmanSprite1.src = "./assets/swordsman1.png";
 
 var settlementSprite = new Image();
 settlementSprite.src = "./assets/building.png"
@@ -118,26 +113,26 @@ var player1Bodies = [];
 var player1Settlement = new Settlement(world.width/2 - 64,world.height-128,128,128,world)
 player1Settlement.setPlayer(1);
 player1Bodies.push(player1Settlement);
-world.addBodies(player1Settlement);
+world.addBody(player1Settlement);
 for (var i = 0, len = 12; i < len; i++) {
     var body =  new SwordsMan(i*64,world.height - 192,32,32,world);
     body.setPlayer(1);
 
     player1Bodies.push(body)
-    world.addBodies(body);
+    world.addBody(body);
 }
 
 var player2Bodies = [];
 var aiSettlement = new Settlement(world.width/2 - 64,0,128,128,world);
 aiSettlement.setPlayer(2);
 player2Bodies.push(aiSettlement);
-world.addBodies(aiSettlement)
+world.addBody(aiSettlement)
 for (var i = 0, len = 12; i < len; i++) {
     var body =  new SwordsMan(i*64,128,32,32,world);
     body.setPlayer(2);
 
     player2Bodies.push(body)
-    world.addBodies(body);
+    world.addBody(body);
 }
 
 

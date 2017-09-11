@@ -14,7 +14,7 @@ function World (canvasContext) {
 
     this.tileSize = 2;
     
-    this.addBodies = (body) => {
+    this.addBody = (body) => {
         this.bodies.push(body);
     };
 
