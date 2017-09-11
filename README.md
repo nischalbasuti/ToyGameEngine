@@ -1,10 +1,10 @@
 # ToyGameEngine
 2D Game Engine written from scratch in JavaScript (ECMAScript 6).
 
-- [Getting Started](https://github.com/nischalbasuti/ToyGameEngine/new/master?readme=1#getting-started "Getting Started")
-- [Defining game objects and adding them to the world](https://github.com/nischalbasuti/ToyGameEngine/new/master?readme=1#Defining-game-objects-and-adding-them-to-the-world)
-- [Collision Detection and Raycasting](https://github.com/nischalbasuti/ToyGameEngine/new/master?readme=1#Collision-Detection-and-Raycasting "Collision Detection and Raycasting")
-- [Pathfinding](https://github.com/nischalbasuti/ToyGameEngine/new/master?readme=1#Pathfinding "Pathfinding")
+- [Getting Started](https://github.com/nischalbasuti/ToyGameEngine/tree/master#getting-started "Getting Started")
+- [Defining game objects and adding them to the world](https://github.com/nischalbasuti/ToyGameEngine/tree/master#defining-game-objects-and-adding-them-to-the-world)
+- [Collision Detection and Raycasting](https://github.com/nischalbasuti/ToyGameEngine/tree/master#collision-detection "Collision Detection and Raycasting")
+- [Pathfinding](https://github.com/nischalbasuti/ToyGameEngine/tree/master#pathfinding "Pathfinding")
 
 ## Getting Started
 
