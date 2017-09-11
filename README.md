@@ -82,7 +82,7 @@ Now initialize your object and add it to the game world.
 var player =  new MyObject(world.width / 2, world.height / 2, 32, 32, world);
 world.addBody(player);
 ```
-Now we have to pass in our update function which will run before rendering each frame.
+Now we have to pass a callback function to ```world.update()``` which will run before rendering each frame.
 We will also add some functionality for moving our player.
 ```javascript
 world.update( () => {
@@ -115,9 +115,9 @@ let us create 3 food objects and define a score variable to store our score.
 ```javascript
 var score = 0;
 
-var food1 = new Food(world.width / 2 , world.height / 4,32,32,world);
-var food2 = new Food(world.width / 4 , world.height / 4,32,32,world);
-var food3 = new Food(world.width / 6, world.height / 4,32,32,world);
+var food1 = new Food(world.width / 2, world.height / 4, 32, 32, world);
+var food2 = new Food(world.width / 4, world.height / 4, 32, 32, world);
+var food3 = new Food(world.width / 6, world.height / 4, 32, 32, world);
 
 world.addBody(food1);
 world.addBody(food2);
@@ -147,13 +147,13 @@ This should be called in the callback we send to ```world.update()```.
 Ex:
 ```javascript
 ...
-player.move(2,4); //call this somewhere so that player.isMoving is set to 'true'
+player.move(2, 4); //call this somewhere so that player.isMoving is set to 'true'
 ...
 world.update( ()=> {
   ...
   ...
   if(player.isMoving) {
-    player.move(2,4);
+    player.move(2, 4);
   }
   ...
   ...
