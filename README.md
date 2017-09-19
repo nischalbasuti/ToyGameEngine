@@ -2,9 +2,10 @@
 2D Game Engine written from scratch in JavaScript (ECMAScript 6).
 
 - [Getting Started](https://github.com/nischalbasuti/ToyGameEngine/tree/master#getting-started "Getting Started")
-- [Defining game objects and adding them to the world](https://github.com/nischalbasuti/ToyGameEngine/tree/master#defining-game-objects-and-adding-them-to-the-world)
+- [Defining game objects and adding them to the world](https://github.com/nischalbasuti/ToyGameEngine/tree/master#defining-game-objects-and-adding-them-to-the-world "Defining game objects and adding them to the world")
 - [Collision Detection and Raycasting](https://github.com/nischalbasuti/ToyGameEngine/tree/master#collision-detection "Collision Detection and Raycasting")
 - [Pathfinding](https://github.com/nischalbasuti/ToyGameEngine/tree/master#pathfinding "Pathfinding")
+- [Building Project](https://github.com/nischalbasuti/ToyGameEngine/tree/master#building-project "Building Project")
 
 ## Getting Started
 
@@ -20,13 +21,7 @@ Add a canvas element to ```index.html```.
 Now add the game engine scripts to ```index.html``` followed by your ```index.js``` you've just created.
 ```html
 <!--Game Engine Scripts-->
-<script src="ToyGameEngine/intersect.js "type="text/javascript" charset="utf-8"></script>
-<script src="ToyGameEngine/pathfinder.js "type="text/javascript" charset="utf-8"></script>
-<script src="ToyGameEngine/body.js" type="text/javascript" charset="utf-8"></script>
-<script src="ToyGameEngine/tile.js" type="text/javascript" charset="utf-8"></script>
-<script src="ToyGameEngine/world.js" type="text/javascript" charset="utf-8"></script>
-<script src="ToyGameEngine/worldRenderer.js "type="text/javascript" charset="utf-8"></script>
-<script src="ToyGameEngine/unit.js" type="text/javascript"  charset="utf-8"></script>
+<script src="ToyGameEngine/build.min.js "type="text/javascript" charset="utf-8"></script>
 <!--Game Scripts-->
 <script src="index.js" type="text/javascript"  charset="utf-8"></script>
 ```
@@ -160,4 +155,16 @@ world.update( ()=> {
 });
 ```
 
-
+## Building Project
+Install build tools
+```
+npm install
+```
+Now transpile the ES6 files in ```src``` to ES2015, these files will be generated in the ```public``` directory.
+```
+npm run js
+```
+Generate to the minified ```build.min.js``` in the root directory.
+```
+grunt
+```
