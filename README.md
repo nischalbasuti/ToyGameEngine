@@ -160,10 +160,10 @@ To install dev tools run:
 ```
 npm install
 ```
-Now we have to transpile the ES6 files in ```src``` to ES2015 using babel, these files will be generated in the ```public``` directory.
-After that we have to minify the files in ```public``` to a singe file, we'll be doing this using ```grunt```.
+Now we have to transpile the ES6 files in ```src``` to ES2015 using babel, these files will be generated in the ```tmp_src``` directory.
+After that we have to minify the files in ```tmp_src``` to a singe file, we'll be doing this using ```grunt```.
 
-To do all this, run the following:
+To do all this, and clean up ```tmp_src``` afterwards, run the following:
 ```
 npm run min
 ```

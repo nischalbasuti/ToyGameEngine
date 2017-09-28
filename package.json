@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "min": "babel src --out-dir public && grunt",
+    "min": "babel src --out-dir tmp_src && grunt && rm -r tmp_src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
