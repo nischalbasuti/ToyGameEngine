@@ -156,15 +156,14 @@ world.update( ()=> {
 ```
 
 ## Building Project
-Install build tools
+To install dev tools run:
 ```
 npm install
 ```
-Now transpile the ES6 files in ```src``` to ES2015, these files will be generated in the ```public``` directory.
+Now we have to transpile the ES6 files in ```src``` to ES2015 using babel, these files will be generated in the ```tmp_src``` directory.
+After that we have to minify the files in ```tmp_src``` to a singe file, we'll be doing this using ```grunt```.
+
+To do all this, and clean up ```tmp_src``` afterwards, run the following:
 ```
-npm run js
-```
-Generate to the minified ```build.min.js``` in the root directory.
-```
-grunt
+npm run min
 ```
