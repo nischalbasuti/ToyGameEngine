@@ -4,7 +4,7 @@ module.exports = function (grunt) {
     // define source files and their destinations
     uglify: {
         files: { 
-            src: './public/*.js',  // source files mask
+            src: './tmp_src/*.js',  // source files mask
             dest: './build.min.js',    // destination folder
             flatten: true,   // remove all unnecessary nesting
         }
