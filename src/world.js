@@ -51,11 +51,15 @@ function World (canvasContext) {
         }
         requestAnimationFrame(this.innerUpdate)
     };
+    //TODO: rename this function
     this.updateTiles = () => {
         for(let body of this.bodies){
-            if(typeof body === 'undefined') continue;
-            if(typeof body.currentAnimation === 'undefined') continue;
+            if(typeof body.currentAnimation != 'function') {
+                console.log("warning: ***undefined animation***")
+                continue;
+            }
             body.currentAnimation();
+
             this.tiles[[body.xTile,body.yTile]].weight = Pathfinder.INFINITY;
             for(let i = 0; i < body.widthInTiles; i++){
                 for(let j = 0; j < body.heightInTiles; j++){
