@@ -54,6 +54,7 @@ function World (canvasContext) {
     this.updateTiles = () => {
         for(let body of this.bodies){
             if(typeof body === 'undefined') continue;
+            if(typeof body.currentAnimation === 'undefined') continue;
             body.currentAnimation();
             this.tiles[[body.xTile,body.yTile]].weight = Pathfinder.INFINITY;
             for(let i = 0; i < body.widthInTiles; i++){
